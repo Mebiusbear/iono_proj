@@ -7,8 +7,8 @@ from src import (read_tec_file,
 import os
 import numpy as np
 
-npixel = 200
-steps= 6
+npixel = 100
+steps= 5
 
 data_dir = "./data"
 filename = os.path.join(data_dir,"CODG%03d0.22I"%(10))
@@ -31,21 +31,37 @@ beta_c_arr, lam_c_arr = spherical_triangle_transform(new_lon_dataset,new_lat_dat
 point_zip = zip_point(beta_c_arr, lam_c_arr)
 
 
+# if __name__ == "__main__":
+#     import dask
+#     import time
+#     from dask.distributed import Client
+#     client = Client(n_workers=8)
+#     print (str(client.dashboard_link))
+#     print ("start_time:\n",time.localtime())
+#     start_time = time.time()
+
+#     block_size = 400
+#     new_point_zip = point_zip.reshape(block_size,-1,2)
+#     task = list()
+#     for i in range (block_size):
+#         task.append(dask.delayed(concat_dataset_allpoint)(point_zip=new_point_zip[i],steps=steps))
+#     data = np.array(dask.compute(*task))
+    
+#     ans_shape = answer.shape[0]
+#     xdata_2 = data.reshape(-1,ans_shape)
+#     res_data_2 = np.dot(xdata_2,answer.T)
+#     res_data_2 = res_data_2.reshape(npixel,npixel)
+
+#     print ("use_time(s):",time.time()-start_time)
+
 if __name__ == "__main__":
-    import dask
     import time
-    from dask.distributed import Client
-    client = Client(n_workers=8)
-    print (str(client.dashboard_link))
     print ("start_time:\n",time.localtime())
     start_time = time.time()
 
-    block_size = 400
-    new_point_zip = point_zip.reshape(block_size,-1,2)
-    task = list()
-    for i in range (block_size):
-        task.append(dask.delayed(concat_dataset_allpoint)(point_zip=new_point_zip[i],steps=steps))
-    data = np.array(dask.compute(*task))
+
+    data = concat_dataset_allpoint(point_zip,steps=steps)
+
     
     ans_shape = answer.shape[0]
     xdata_2 = data.reshape(-1,ans_shape)
