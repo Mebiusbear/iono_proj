@@ -30,29 +30,17 @@ new_lat_dataset = np.linspace(-12.5,-47.5,npixel)
 beta_c_arr, lam_c_arr = spherical_triangle_transform(new_lon_dataset,new_lat_dataset,p_lat=np.radians(10),p_lon=np.radians(10))
 point_zip = zip_point(beta_c_arr, lam_c_arr)
 
-
-# if __name__ == "__main__":
-#     import dask
-#     import time
-#     from dask.distributed import Client
-#     client = Client(n_workers=8)
-#     print (str(client.dashboard_link))
-#     print ("start_time:\n",time.localtime())
-#     start_time = time.time()
-
-#     block_size = 400
-#     new_point_zip = point_zip.reshape(block_size,-1,2)
-#     task = list()
-#     for i in range (block_size):
-#         task.append(dask.delayed(concat_dataset_allpoint)(point_zip=new_point_zip[i],steps=steps))
-#     data = np.array(dask.compute(*task))
-    
-#     ans_shape = answer.shape[0]
-#     xdata_2 = data.reshape(-1,ans_shape)
-#     res_data_2 = np.dot(xdata_2,answer.T)
-#     res_data_2 = res_data_2.reshape(npixel,npixel)
-
-#     print ("use_time(s):",time.time()-start_time)
+def concat_dask_workflow(point_zip,steps,block_size):
+    import dask
+    from dask.distributed import Client
+    client = Client(n_workers=8)
+    print (str(client.dashboard_link))
+    new_point_zip = point_zip.reshape(block_size,-1,2)
+    task = list()
+    for i in range (block_size):
+        task.append(dask.delayed(concat_dataset_allpoint)(point_zip=new_point_zip[i],steps=steps))
+    data = np.array(dask.compute(*task))
+    return data
 
 if __name__ == "__main__":
     import time
@@ -60,8 +48,8 @@ if __name__ == "__main__":
     start_time = time.time()
 
 
-    data = concat_dataset_allpoint(point_zip,steps=steps)
-
+    # data = concat_dataset_allpoint(point_zip,steps=steps)
+    data = concat_dask_workflow(point_zip=point_zip,steps=steps,block_size=400)
     
     ans_shape = answer.shape[0]
     xdata_2 = data.reshape(-1,ans_shape)
