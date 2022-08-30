@@ -8,7 +8,7 @@ def caculate_nkm(k,m):
         delta_0m = 0
     
     nkm = (2-delta_0m) * (2*k+1) * math.factorial(k-m) / math.factorial(k+m)
-    return nkm
+    return np.sqrt(nkm)
 
 def caculate_pkm(k,m,theta):
     # print (k,m,theta)
@@ -28,19 +28,34 @@ def caculate_pkm(k,m,theta):
 
 def normalize_pkm(k,m,theta):
     return caculate_nkm(k,m) * caculate_pkm(k,m,theta)
-
-def initial_nkm(steps):
-    size = 6
-    arr = np.zeros((size,size))
-    for i in range(size):
-        for j in range (size):
-            # arr[i][j] = caculate_nkm(`1`)
-            pass
     
-
-    
+def ath2_nkm(k,m,theta):
+    if m == 0:
+        if k == 0:
+            return 1
+        if k == 1:
+            return np.sqrt(3) * np.cos(theta)
+        if k > 1:
+            factor_1 = np.sqrt(4*k**2-1) / k * np.cos(theta) * ath2_nkm(k-1,m,theta)
+            factor_2 = (k-1) / k * np.sqrt((2*k+1)/(2*k-3)) * ath2_nkm(k-2,m,theta)
+            return factor_1 - factor_2
+    else:
+        if m == k:
+            if m == 1:
+                return np.sqrt(3) * np.cos(theta)
+            else:
+                return np.sqrt((2*k+1)/ (2*k)) * np.sin(theta) * ath2_nkm(k-1,k-1,theta)
+        elif m == k-1:
+            return np.sqrt(2*k+1) * np.sin(theta) * ath2_nkm(k-1,k-1,theta)
+        elif m < k-1:
+            factor_1 = np.sqrt((4*k**2-1)/(k**2-m**2)) * np.sin(theta) * ath2_nkm(k-1,m,theta)
+            factor_2 = np.sqrt((2*k+1)*((k-1)**2-m**2)/(2*k-3)/(k**2-m**2)) * ath2_nkm(k-2,m,theta)
+            return factor_1 - factor_2
+        
 if __name__ == "__main__":
-    initial_nkm(10)
 
-    
+    print ("k,m=1,1;",np.allclose(ath2_nkm(1,1,0.3),normalize_pkm(1,1,0.3)))
+    print ("k,m=2,1;",np.allclose(ath2_nkm(2,1,0.3),normalize_pkm(2,1,0.3)))
+    print ("k,m=2,2;",np.allclose(ath2_nkm(2,2,0.3),normalize_pkm(2,2,0.3)))
+    print ("k,m=3,1;",np.allclose(ath2_nkm(3,1,0.3),normalize_pkm(3,1,0.3)))
     
