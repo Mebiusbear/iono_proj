@@ -1,13 +1,13 @@
-from .part_1 import (read_tec_file,
+from .ionox import (read_tec_file,
                     download_codg,
                     unzip_Z)
                     
-from .part_1 import (spherical_triangle_transform,
+from .spherical_harmonic import (spherical_triangle_transform,
                                 zip_point,
                                 concat_dataset,
                                 fit_spherical_harmonic,
                                 concat_dataset_allpoint)
-from .part_1 import least_square
-from .part_1 import normalize_pkm
-from .part_1 import least_square
-from .part_1 import make_plot
+from .least_square import least_square
+from .normalized_legendre import normalize_pkm
+from .least_square import least_square
+from .make_plot import make_plot
