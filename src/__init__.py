@@ -10,3 +10,4 @@ from .spherical_harmonic import (spherical_triangle_transform,
 from .least_square import least_square
 from .normalized_legendre import normalize_pkm
 from .least_square import least_square
+from .make_plot import make_plot
