@@ -10,13 +10,15 @@ import time
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='YOLO Detection')
-    parser.add_argument("-np","--npixel", type=int, help="the pixel.", default=100)
-    parser.add_argument("-s","--steps", type=int, help="the steps.", default=5)
-    parser.add_argument("-nw","--n_worker", type=int, help="n_worker.", default=1)
-    parser.add_argument("-bs","--block_size", type=int, help="block_size.", default=400)
-    parser.add_argument("-po","--plot_only", type=bool, help="plot_only.", default=False)
+    parser.add_argument("-np","--npixel", type=int, default=100)
+    parser.add_argument("-s","--steps", type=int, default=5)
+    parser.add_argument("-nw","--n_worker", type=int, default=1)
+    parser.add_argument("-bs","--block_size", type=int, default=400)
+    parser.add_argument("-po","--plot_only", type=bool, default=False)
+    parser.add_argument("-mr","--mac_run", default=False, action='store_true')
 
     args = parser.parse_args()
+    print (args)
     iono = Fit_iono(args)
 
     start = time.time()

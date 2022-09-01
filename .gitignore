@@ -1,4 +1,4 @@
 src/__pycache__/*
 dask-worker-space
-results/pixel*
+results/image_npy/pixel*
 src/apps/__pycache__
