@@ -16,6 +16,7 @@ if __name__ == "__main__":
     parser.add_argument("-bs","--block_size", type=int, default=400)
     parser.add_argument("-po","--plot_only", type=bool, default=False)
     parser.add_argument("-mr","--mac_run", default=False, action='store_true')
+    parser.add_argument("-lr","--linux_run", default=False, action='store_true')
 
     args = parser.parse_args()
     print (args)
