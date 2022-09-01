@@ -20,7 +20,7 @@ class Fit_iono:
 
         output_dir = "./results"
         self.image_filename = "pixel_%d_step_%d.npy"%(self.npixel,self.steps)
-        self.image_filename = os.path.join("image",self.image_filename)
+        self.image_filename = os.path.join("image_npy",self.image_filename)
         self.output_image_filename = os.path.join(output_dir,self.image_filename)
 
         self.param_filename = "param_step_%d.npy"%(self.steps)
