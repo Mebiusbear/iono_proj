@@ -1,13 +1,12 @@
-from src import (read_tec_file,
-                spherical_triangle_transform,
-                zip_point,
-                fit_spherical_harmonic,
-                concat_dataset_allpoint,
-                make_plot,
-                zip_point)
-import os
+from src.apps.ionox import read_tec_file
+from src.apps.make_plot import make_plot
+from src.apps.spherical_harmonic import (spherical_triangle_transform,
+                                         zip_point,
+                                         fit_spherical_harmonic,
+                                         concat_dataset_allpoint)
 import numpy as np
 import argparse
+import os
 import time
 
 
@@ -46,6 +45,7 @@ def concat_dask_workflow(point_zip,steps,block_size,n_worker):
         task.append(dask.delayed(concat_dataset_allpoint)(point_zip=new_point_zip[i],steps=steps))
     data = np.array(dask.compute(*task))
     return data
+
 
 if __name__ == "__main__":
 

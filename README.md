@@ -1,3 +1,10 @@
+# Hot to use iono_proj
+
+```
+git clone https://github.com/Mebiusbear/iono_ptoj.git
+export PYTHONPATH=$PYTHONPATH: /path/to/iono_pro
+```
+
 # How to download GIM
 
 ```python

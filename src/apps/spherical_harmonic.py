@@ -1,6 +1,9 @@
 # spherical_harmonic.py
 import numpy as np
 
+from src.apps.normalized_legendre import normalize_pkm
+from src.apps.least_square import least_square
+
 
 def spherical_triangle_transform(lon_dataset,lat_dataset,p_lat=0,p_lon=0):
     '''
@@ -44,7 +47,7 @@ def concat_dataset(theta,lam_c,steps=5):
     output:
         array[cos, sin]
     '''
-    from part_1.normalized_legendre import normalize_pkm
+    # from src.apps.normalized_legendre import normalize_pkm
     m = np.array([m for k in range (steps+1) for m in range (1,k+1) if m < 7])
     lam_c_arr = np.ones_like(m) * lam_c * m
     para_cos_arr = np.cos(lam_c_arr)
@@ -65,7 +68,7 @@ def concat_dataset_allpoint(point_zip,steps=5):
     return np.array(xdata,np.float64)
 
 def fit_spherical_harmonic(point_zip,ydata,steps=5):
-    from part_1.least_square import least_square
+    # from src.apps.least_square import least_square
 
     xdata = concat_dataset_allpoint(point_zip,steps)
 
