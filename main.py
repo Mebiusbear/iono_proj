@@ -27,7 +27,10 @@ if __name__ == "__main__":
     if args.plot_only:
         iono.make_plot()
     else:
-        iono.run()
+        if args.linux_run:
+            iono.linux_run()
+        else:
+            iono.run()
 
     end = time.time()
     print ("use time(second) : ",end-start)
