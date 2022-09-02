@@ -14,9 +14,10 @@ if __name__ == "__main__":
     parser.add_argument("-s","--steps", type=int, default=5)
     parser.add_argument("-nw","--n_worker", type=int, default=1)
     parser.add_argument("-bs","--block_size", type=int, default=400)
-    parser.add_argument("-po","--plot_only", type=bool, default=False)
+    parser.add_argument("-po","--plot_only", default=False, action='store_true')
     parser.add_argument("-mr","--mac_run", default=False, action='store_true')
     parser.add_argument("-lr","--linux_run", default=False, action='store_true')
+    parser.add_argument("-mmp","--make_mul_plot", default=False, action='store_true')
 
     args = parser.parse_args()
     print (args)
@@ -25,17 +26,16 @@ if __name__ == "__main__":
     start = time.time()
 
     if args.plot_only:
-        iono.make_plot()
+        if args.make_mul_plot:
+            iono.makemulplot()
+        else:
+            iono.make_plot()
     else:
         if args.linux_run:
             iono.linux_run()
-        else:
+        elif args.mac_run:
             iono.run()
 
     end = time.time()
     print ("use time(second) : ",end-start)
-
-
-
-    
 

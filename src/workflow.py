@@ -1,5 +1,5 @@
 from src.apps.ionox import read_tec_file
-from src.apps.make_plot import make_plot
+from src.apps.make_plot import make_mul_plot, make_plot
 from src.apps.spherical_harmonic import (spherical_triangle_transform,
                                          zip_point,
                                          fit_spherical_harmonic,
@@ -46,8 +46,9 @@ class Fit_iono:
         point_zip = zip_point(beta_c_arr, lam_c_arr)    
 
         xdata_1,answer = fit_spherical_harmonic(point_zip,ydata,steps=steps)
+        res_data_1 = np.dot(xdata_1,answer.T).reshape(15,15)
 
-        return xdata_1,answer
+        return (ydata,res_data_1),answer
 
     def part_2(self):
         npixel = self.npixel
@@ -81,6 +82,13 @@ class Fit_iono:
 
     def makeplot(self):
         make_plot(self.output_image_filename)
+
+    def makemulplot(self):
+        (ydata,res_data_1), answer = self.part_1()
+        ydata = ydata.reshape(15,15)
+        make_mul_plot(ydata,res_data_1,self.output_image_filename)
+
+
     
     def run(self):
         _, answer = self.part_1()

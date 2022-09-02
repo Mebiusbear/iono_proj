@@ -2,7 +2,12 @@
 
 ```
 git clone https://github.com/Mebiusbear/iono_ptoj.git
-export PYTHONPATH=$PYTHONPATH: /path/to/iono_pro
+export PYTHONPATH=$PYTHONPATH: /path/to/iono_proj
+```
+
+## just see picture
+```
+python main.py -np 4000 -s 5 -po -mmp
 ```
 
 # How to download GIM
