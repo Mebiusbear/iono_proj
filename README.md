@@ -5,6 +5,16 @@ git clone https://github.com/Mebiusbear/iono_ptoj.git
 export PYTHONPATH=$PYTHONPATH: /path/to/iono_proj
 ```
 
+## mac run
+```
+python main.py -np 4000 -s 5 -nw 16 -bs 800 -mr  
+```
+
+## linux run
+```
+python main.py -np 4000 -s 5 -nw 16 -bs 800 -lr  
+```
+
 ## just see picture
 ```
 python main.py -np 4000 -s 5 -po -mmp

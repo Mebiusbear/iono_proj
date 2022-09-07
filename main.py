@@ -29,7 +29,7 @@ if __name__ == "__main__":
         if args.make_mul_plot:
             iono.makemulplot()
         else:
-            iono.make_plot()
+            iono.makeplot()
     else:
         if args.linux_run:
             iono.linux_run()
