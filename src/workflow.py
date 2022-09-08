@@ -7,7 +7,6 @@ from src.apps.spherical_harmonic import (spherical_triangle_transform,
                                          concat_dask_workflow)
 import numpy as np
 import os
-import time
 
 class Fit_iono:
     def __init__(self,args):
@@ -84,12 +83,11 @@ class Fit_iono:
         make_plot(self.output_image_filename)
 
     def makemulplot(self):
-        (ydata,res_data_1), answer = self.part_1()
+        (ydata,res_data_1), answer = self.part_1()  
         ydata = ydata.reshape(15,15)
         make_mul_plot(ydata,res_data_1,self.output_image_filename)
 
 
-    
     def run(self):
         _, answer = self.part_1()
         np.save(self.output_param_filename,answer)

@@ -99,3 +99,4 @@ plt.imshow(res_data_2.reshape(200,200))
 
 plt.show()
 ```
+
