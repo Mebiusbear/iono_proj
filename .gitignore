@@ -2,5 +2,5 @@ src/__pycache__
 dask-worker-space
 results/image_npy/pixel*
 src/apps/__pycache__
-
+test_screen_60s*
 .DS_Store

@@ -28,7 +28,9 @@ def caculate_pkm(k,m,theta):
 
 def normalize_pkm(k,m,theta):
     return caculate_nkm(k,m) * caculate_pkm(k,m,theta)
-    
+
+
+# test！
 def ath2_nkm(k,m,theta):
     if m == 0:
         if k == 0:

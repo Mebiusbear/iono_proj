@@ -35,12 +35,16 @@ class Fit_iono:
         filename = os.path.join(data_dir,"CODG%03d0.22I"%(10))  
 
         tecarray, _, lonarray, latarray, _ = read_tec_file(filename)    
-        tec_dataset = tecarray[4][40:55,35:50]  
+        # tec_dataset = tecarray[4][40:55,35:50] # old
+        tec_dataset = tecarray[21][50:65,36:51] # new
         ydata = tec_dataset.reshape(1,-1)[0]    
         ydata = np.array(ydata,dtype=np.float64)    
 
-        lon_dataset = lonarray[35:50]   
-        lat_dataset = latarray[40:55]   
+        # lon_dataset = lonarray[35:50]   # old
+        # lat_dataset = latarray[40:55]   # old
+        lon_dataset = lonarray[50:65]   # new
+        lat_dataset = latarray[36:51]   # new
+
         beta_c_arr, lam_c_arr = spherical_triangle_transform(lon_dataset,lat_dataset,p_lat=np.radians(10),p_lon=np.radians(10)) 
         point_zip = zip_point(beta_c_arr, lam_c_arr)    
 
@@ -53,8 +57,10 @@ class Fit_iono:
         npixel = self.npixel
         steps= self.steps
 
-        new_lon_dataset = np.linspace(-5,65,npixel) 
-        new_lat_dataset = np.linspace(-12.5,-47.5,npixel)   
+        # new_lon_dataset = np.linspace(-5,65,npixel) # old
+        # new_lat_dataset = np.linspace(-12.5,-47.5,npixel) # old
+        new_lon_dataset = np.linspace(70,140,npixel) 
+        new_lat_dataset = np.linspace(-2.5,-37.5,npixel)   
         beta_c_arr, lam_c_arr = spherical_triangle_transform(new_lon_dataset,new_lat_dataset,p_lat=np.radians(10),p_lon=np.radians(10)) 
         point_zip = zip_point(beta_c_arr, lam_c_arr)
 
@@ -87,15 +93,17 @@ class Fit_iono:
         ydata = ydata.reshape(15,15)
         make_mul_plot(ydata,res_data_1,self.output_image_filename)
 
-
+    # 输入mac_run则直接跑结果，否则仅输出参数
     def run(self):
         _, answer = self.part_1()
         np.save(self.output_param_filename,answer)
+        print ("Save : ",self.output_param_filename)
         
         if self.mac_run:
             point_zip = self.part_2()
             self.part_3(point_zip,answer)
 
+    # 不支持直接求球谐函数的参数
     def linux_run(self):
         answer = np.load(self.output_param_filename)
         point_zip = self.part_2()

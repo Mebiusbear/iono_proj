@@ -33,8 +33,9 @@ if __name__ == "__main__":
     else:
         if args.linux_run:
             iono.linux_run()
-        elif args.mac_run:
+        else :
             iono.run()
+
 
     end = time.time()
     print ("use time(second) : ",end-start)
