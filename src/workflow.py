@@ -1,3 +1,8 @@
+import sys
+import numpy as np
+import os
+sys.path.append("./")
+
 from src.apps.ionox import read_tec_file
 from src.apps.make_plot import make_mul_plot, make_plot
 from src.apps.spherical_harmonic import (spherical_triangle_transform,
@@ -5,8 +10,7 @@ from src.apps.spherical_harmonic import (spherical_triangle_transform,
                                          fit_spherical_harmonic,
                                          concat_dataset_allpoint,
                                          concat_dask_workflow)
-import numpy as np
-import os
+
 
 class Fit_iono:
     def __init__(self,args):
@@ -27,6 +31,11 @@ class Fit_iono:
         self.output_param_filename = os.path.join(output_dir,self.param_filename)
 
     def part_1(self):
+        range_size = 15
+        lon_start = 50
+        lon_end = lon_start+range_size
+        lat_start = 36
+        lat_end = lat_start+range_size
 
         npixel = self.npixel
         steps= self.steps
@@ -36,14 +45,14 @@ class Fit_iono:
 
         tecarray, _, lonarray, latarray, _ = read_tec_file(filename)    
         # tec_dataset = tecarray[4][40:55,35:50] # old
-        tec_dataset = tecarray[21][50:65,36:51] # new
-        ydata = tec_dataset.reshape(1,-1)[0]    
+        tec_dataset = tecarray[21][lon_start:lon_end,lat_start:lat_end] # new
+        ydata = tec_dataset.reshape(1,-1)[0]
         ydata = np.array(ydata,dtype=np.float64)    
 
         # lon_dataset = lonarray[35:50]   # old
         # lat_dataset = latarray[40:55]   # old
-        lon_dataset = lonarray[50:65]   # new
-        lat_dataset = latarray[36:51]   # new
+        lon_dataset = lonarray[lon_start:lon_end]   # new
+        lat_dataset = latarray[lat_start:lat_end]   # new
 
         beta_c_arr, lam_c_arr = spherical_triangle_transform(lon_dataset,lat_dataset,p_lat=np.radians(10),p_lon=np.radians(10)) 
         point_zip = zip_point(beta_c_arr, lam_c_arr)    
