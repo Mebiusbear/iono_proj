@@ -1,4 +1,5 @@
 # spherical_harmonic.py
+import chunk
 import numpy as np
 
 from src.apps.normalized_legendre import normalize_pkm
@@ -62,28 +63,28 @@ def concat_dataset(theta,lam_c,steps=5):
     return ans
 
 def concat_dataset_allpoint(point_zip,steps=5):
-    xdata = list()
-    for beta_c,lam_c in point_zip:
-        xdata.append(concat_dataset(beta_c,lam_c,steps))
-    return np.array(xdata,np.float64)
+    xdata = np.zeros((len(point_zip),30),np.float64)
+    for i,(beta_c,lam_c) in enumerate(point_zip):
+        xdata[i] = concat_dataset(beta_c,lam_c,steps)
+    return xdata
 
 def concat_dask_workflow(point_zip,steps,block_size,n_worker):   
     import dask 
-    from dask.distributed import Client 
-    client = Client(n_workers=n_worker)    
-    print ("dask_board: ",str(client.dashboard_link))  
-    new_point_zip = point_zip.reshape(block_size,-1,2)  
-    task = list()   
+    from dask.distributed import Client
+    client = Client(n_workers=n_worker)
+    # print ("dask_board: ",str(client.dashboard_link))  
+    new_point_zip = point_zip.reshape(block_size,-1,2)
+    task = list()
     for i in range (block_size):
         task.append(dask.delayed(concat_dataset_allpoint)(point_zip=new_point_zip[i],steps=steps))
     data = np.array(dask.compute(*task))
+    client.close()
     return data
 
 def fit_spherical_harmonic(point_zip,ydata,steps=5):
     # from src.apps.least_square import least_square
 
     xdata = concat_dataset_allpoint(point_zip,steps)
-
     answer = least_square(xdata,ydata)
 
     return xdata,answer

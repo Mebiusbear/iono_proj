@@ -5,9 +5,9 @@
 #! 计费账号
 #SBATCH --account astro
 #! 需要的节点数
-#SBATCH --nodes=6
+#SBATCH --nodes=2
 #! 总任务数
-#SBATCH --ntasks=6
+#SBATCH --ntasks=2
 #! 内存限制
 ##SBATCH --mem 100000M
 #! 时间限制
@@ -24,18 +24,18 @@
 #! 最大switches数
 #SBATCH --switches=1
 #! 优先使用那个node
-#SBATCH --nodelist astrolab-hpc-[1-8]
+#SBATCH --nodelist astrolab-hpc-[2-3]
 #! 避开哪个node
 ##SBATCH --exclude astrolab-hpc-[9-13]
 #! 输出文件名
-#SBATCH --output ./slurm_out/slurm-sim-%A.out
+#SBATCH --output ./slurm/slurm_out/slurm-sim-%A.out
 #! 是否独占节点
 ##SBATCH --exclusive
 #SBATCH --cpus-per-task=32
 
 source /home/liuyihong/.bashrc
 
-conda activate torch-py3.7
+conda activate testdask
 
 #! Set up python
 echo -e "[main]Running python: `which python`"
@@ -43,24 +43,24 @@ echo -e "[main]which main in node: `hostname`"
 echo -e "[main]Running dask-scheduler: `which dask-scheduler`"
 
 cd $SLURM_SUBMIT_DIR
-echo -e "[main]Changed directory to `pwd`.\n"
+echo -e "[main]Changed directory to `pwd`\n"
 
 JOBID=${SLURM_JOB_ID}
 echo ${SLURM_JOB_NODELIST}
 
 #! 把调度器跑起来
-localdir=/tmp
-# mkdir -p ${localdir}
-protool=ucx
-scheduler=$(ip addr show ib0 | grep inet | grep -v inet6 | awk '{print $2}' | cut -c -12)
-port=9900
-dashboardport=9901
+localdir=/tmp/liuyihong
+mkdir -p ${localdir}
+protool=tcp
+scheduler=10.10.20.201
+port=28886
+dashboardport=28885
 dask-scheduler --dashboard-address $dashboardport --protocol ${protool} --interface ib0 --port $port &
 echo dask-scheduler started on ${scheduler}:${port}
 sleep 2
 
 #! 把worker跑起来
-srun -o ./slurm_out/srun_%x_%j_worker_%n.out dask-worker --nprocs 2 --nthreads 1 --interface ib0 --memory-limit 460GiB --local-directory ${localdir} ${protool}://${scheduler}:${port} &
+srun -o ./slurm/slurm_out/srun_%x_%j_worker_%n.out dask-worker --nprocs 2 --nthreads 1 --interface ib0 --memory-limit 460GiB --local-directory ${localdir} ${protool}://${scheduler}:${port} &
 echo dask-worker started on all nodes
 
 sleep 1
@@ -70,4 +70,5 @@ nthreads=16
 
 export RASCIL_DASK_SCHEDULER=${protool}://${scheduler}:${port}
 
-python /mnt/storage-work/iono_proj/main.py  -np 4000 -s 5 -nw 120 -bs 800 -lr  
+python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -np 400 -s 5 -nw 20 -bs 200 -lr  
+       

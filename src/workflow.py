@@ -85,6 +85,7 @@ class Fit_iono:
         if n_worker == 1:
             data = concat_dataset_allpoint(point_zip,steps=steps)
         else:
+            print ("Part 3, run on dask!")
             data = concat_dask_workflow(point_zip=point_zip,steps=steps,block_size=block_size,n_worker=n_worker)
         
         ans_shape = answer.shape[0]
@@ -116,4 +117,5 @@ class Fit_iono:
     def linux_run(self):
         answer = np.load(self.output_param_filename)
         point_zip = self.part_2()
+        print ("Part 2,finish")
         self.part_3(point_zip,answer)
