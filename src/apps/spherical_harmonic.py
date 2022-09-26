@@ -63,16 +63,25 @@ def concat_dataset(theta,lam_c,steps=5):
     return ans
 
 def concat_dataset_allpoint(point_zip,steps=5):
-    xdata = np.zeros((len(point_zip),30),np.float64)
+    a, b = point_zip[0]
+    c = concat_dataset(a,b,steps)
+    c_shape = c.shape[0]
+    xdata = np.zeros((len(point_zip),c_shape),np.float64)
     for i,(beta_c,lam_c) in enumerate(point_zip):
         xdata[i] = concat_dataset(beta_c,lam_c,steps)
     return xdata
 
-def concat_dask_workflow(point_zip,steps,block_size,n_worker):   
+def concat_dask_workflow(point_zip,steps,block_size,n_worker,scheduler):   
     import dask 
     from dask.distributed import Client
-    client = Client(n_workers=n_worker)
-    # print ("dask_board: ",str(client.dashboard_link))  
+    if scheduler == None:
+        client = Client(n_workers=n_worker)
+    else:
+        client = Client(scheduler)
+        print ("Client OK!, scheduler: ",scheduler)
+    # print ("dask_board: ",str(client.dashboard_link)) 
+
+    
     new_point_zip = point_zip.reshape(block_size,-1,2)
     task = list()
     for i in range (block_size):

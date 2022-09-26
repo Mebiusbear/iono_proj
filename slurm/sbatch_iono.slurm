@@ -5,9 +5,9 @@
 #! 计费账号
 #SBATCH --account astro
 #! 需要的节点数
-#SBATCH --nodes=2
+#SBATCH --nodes=10
 #! 总任务数
-#SBATCH --ntasks=2
+#SBATCH --ntasks=10
 #! 内存限制
 ##SBATCH --mem 100000M
 #! 时间限制
@@ -24,9 +24,9 @@
 #! 最大switches数
 #SBATCH --switches=1
 #! 优先使用那个node
-#SBATCH --nodelist astrolab-hpc-[2-3]
+#SBATCH --nodelist astrolab-hpc-[2-11]
 #! 避开哪个node
-##SBATCH --exclude astrolab-hpc-[9-13]
+##SBATCH --exclude astrolab-hpc-[12-13]
 #! 输出文件名
 #SBATCH --output ./slurm/slurm_out/slurm-sim-%A.out
 #! 是否独占节点
@@ -52,23 +52,27 @@ echo ${SLURM_JOB_NODELIST}
 localdir=/tmp/liuyihong
 mkdir -p ${localdir}
 protool=tcp
-scheduler=10.10.20.201
+scheduler=10.10.20.202
 port=28886
 dashboardport=28885
 dask-scheduler --dashboard-address $dashboardport --protocol ${protool} --interface ib0 --port $port &
 echo dask-scheduler started on ${scheduler}:${port}
 sleep 2
 
-#! 把worker跑起来
-srun -o ./slurm/slurm_out/srun_%x_%j_worker_%n.out dask-worker --nprocs 2 --nthreads 1 --interface ib0 --memory-limit 460GiB --local-directory ${localdir} ${protool}://${scheduler}:${port} &
+
+#! 把worker跑起来 输出worker status
+#! srun -o ./slurm/slurm_out/srun_%x_%j_worker_%n.out dask-worker --nprocs 32 --nthreads 1 --interface ib0 --memory-limit 460GiB --local-directory ${localdir} ${protool}://${scheduler}:${port} &
+#! echo dask-worker started on all nodes
+
+#! 把worker跑起来 不输出worker status
+srun dask-worker --nprocs 32 --nthreads 1 --interface ib0 --memory-limit 460GiB --local-directory ${localdir} ${protool}://${scheduler}:${port} &
 echo dask-worker started on all nodes
 
 sleep 1
 echo "[main]Scheduler and workers now running"
 
-nthreads=16
 
-export RASCIL_DASK_SCHEDULER=${protool}://${scheduler}:${port}
+#! We need to tell dask Client (inside python) where the scheduler is running
+echo "Scheduler is running at ${scheduler}"
 
-python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -np 400 -s 5 -nw 20 -bs 200 -lr  
-       
+python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -sch "${scheduler}:${port}" -np 5821 -s 5 -nw 20 -bs 5821 -lr  

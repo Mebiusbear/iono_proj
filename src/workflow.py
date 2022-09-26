@@ -20,6 +20,7 @@ class Fit_iono:
         self.n_worker = args.n_worker
         self.plot_only = args.plot_only
         self.mac_run = args.mac_run
+        self.scheduler = args.scheduler
 
         output_dir = "./results"
         self.image_filename = "pixel_%d_step_%d.npy"%(self.npixel,self.steps)
@@ -66,10 +67,18 @@ class Fit_iono:
         npixel = self.npixel
         steps= self.steps
 
+        earth_r = 6371.393
+        iono_r  = earth_r + 300
+        screensize_km = iono_r * 5 * np.pi / 180
+        pixel_per_screensize_km = screensize_km / npixel
+        print ("pixel_per_screensize",pixel_per_screensize_km,"(km)")
+
         # new_lon_dataset = np.linspace(-5,65,npixel) # old
         # new_lat_dataset = np.linspace(-12.5,-47.5,npixel) # old
-        new_lon_dataset = np.linspace(70,140,npixel) 
-        new_lat_dataset = np.linspace(-2.5,-37.5,npixel)   
+        # new_lon_dataset = np.linspace(70,140,npixel) 
+        # new_lat_dataset = np.linspace(-2.5,-37.5,npixel)   
+        new_lon_dataset = np.linspace(116.4525771-2.5,116.4525771+2.5,npixel) 
+        new_lat_dataset = np.linspace(-26.60055525-2.5,-26.60055525+2.5,npixel)   
         beta_c_arr, lam_c_arr = spherical_triangle_transform(new_lon_dataset,new_lat_dataset,p_lat=np.radians(10),p_lon=np.radians(10)) 
         point_zip = zip_point(beta_c_arr, lam_c_arr)
 
@@ -81,12 +90,13 @@ class Fit_iono:
         steps= self.steps
         block_size = self.block_size
         n_worker = self.n_worker
+        scheduler = self.scheduler
 
         if n_worker == 1:
             data = concat_dataset_allpoint(point_zip,steps=steps)
         else:
             print ("Part 3, run on dask!")
-            data = concat_dask_workflow(point_zip=point_zip,steps=steps,block_size=block_size,n_worker=n_worker)
+            data = concat_dask_workflow(point_zip=point_zip,steps=steps,block_size=block_size,n_worker=n_worker,scheduler=scheduler)
         
         ans_shape = answer.shape[0]
         xdata_2 = data.reshape(-1,ans_shape)
@@ -117,5 +127,5 @@ class Fit_iono:
     def linux_run(self):
         answer = np.load(self.output_param_filename)
         point_zip = self.part_2()
-        print ("Part 2,finish")
+        print ("Part 2, finish")
         self.part_3(point_zip,answer)
