@@ -1,6 +1,8 @@
 src/__pycache__
 dask-worker-space
-results/image_npy/pixel*
+results/image_npy/*
+results/image_bigrange/*
+!results/imgage_bigrange/*png
 src/apps/__pycache__
 test_screen_60s*
 .DS_Store

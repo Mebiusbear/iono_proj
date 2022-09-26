@@ -8,7 +8,7 @@ def make_plot(filename):
 
     plt.imshow(im)
     plt.colorbar()
-    plt.show()
+    # plt.show()
 
 def make_mul_plot(ydata,res_data_1,npy_filename):
     
@@ -23,17 +23,21 @@ def make_mul_plot(ydata,res_data_1,npy_filename):
     plt.title("origin")
     plt.axis("off")
     plt.imshow(np.array(ydata))
+    plt.colorbar(orientation='horizontal')
+
 
     plt.subplot(132)
     plt.title("280 point")
     plt.axis("off")
     plt.imshow(res_data_1)
+    plt.colorbar(orientation='horizontal')
 
     plt.subplot(133)
     plt.title("4000^2 point")
     plt.axis("off")
     res_data_2 = np.load(npy_filename)
     plt.imshow(res_data_2)
+    plt.colorbar(orientation='horizontal')
 
     plt.savefig(png_filename)
-    plt.show()
+    # plt.show()

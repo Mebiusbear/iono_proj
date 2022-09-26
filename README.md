@@ -117,3 +117,8 @@ plt.show()
 + func : concat_dataset_allpoint 要改
 + 程序上拆开拟合图像部分
 + 改做dask_workflow
++ fuser -km .vscode-server && rm -rf .vscode-server
++ log文件
++ param数据加上范围标记
++ 重新审视精度
++ mkdir resluts/image_npy

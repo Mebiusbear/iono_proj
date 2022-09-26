@@ -59,6 +59,8 @@ class Fit_iono:
         point_zip = zip_point(beta_c_arr, lam_c_arr)    
 
         xdata_1,answer = fit_spherical_harmonic(point_zip,ydata,steps=steps)
+        if self.plot_only:
+            answer = np.load(self.output_param_filename)
         res_data_1 = np.dot(xdata_1,answer.T).reshape(15,15)
 
         return (ydata,res_data_1),answer
@@ -67,19 +69,24 @@ class Fit_iono:
         npixel = self.npixel
         steps= self.steps
 
+        pixel_per_screensize_km = 0.1 # 加到args处
+        screensize_km  = pixel_per_screensize_km * npixel
+        
         earth_r = 6371.393
         iono_r  = earth_r + 300
-        screensize_km = iono_r * 5 * np.pi / 180
-        pixel_per_screensize_km = screensize_km / npixel
+        iono_deg = screensize_km * 180 / iono_r / np.pi
+        iono_half_deg = iono_deg / 2
+
         print ("pixel_per_screensize",pixel_per_screensize_km,"(km)")
 
-        # new_lon_dataset = np.linspace(-5,65,npixel) # old
-        # new_lat_dataset = np.linspace(-12.5,-47.5,npixel) # old
+
         # new_lon_dataset = np.linspace(70,140,npixel) 
         # new_lat_dataset = np.linspace(-2.5,-37.5,npixel)   
-        new_lon_dataset = np.linspace(116.4525771-2.5,116.4525771+2.5,npixel) 
-        new_lat_dataset = np.linspace(-26.60055525-2.5,-26.60055525+2.5,npixel)   
+        new_lon_dataset = np.linspace(116.4525771-iono_half_deg,116.4525771+iono_half_deg,npixel,dtype=np.float64)
+        new_lat_dataset = np.linspace(-26.60055525-iono_half_deg,-26.60055525+iono_half_deg,npixel,dtype=np.float64)
         beta_c_arr, lam_c_arr = spherical_triangle_transform(new_lon_dataset,new_lat_dataset,p_lat=np.radians(10),p_lon=np.radians(10)) 
+        print ("longitude range : ",new_lon_dataset[0],new_lon_dataset[-1])
+        print ("latitude range : ",new_lat_dataset[0],new_lat_dataset[-1])
         point_zip = zip_point(beta_c_arr, lam_c_arr)
 
         return point_zip

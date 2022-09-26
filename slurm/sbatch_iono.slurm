@@ -26,7 +26,7 @@
 #! 优先使用那个node
 #SBATCH --nodelist astrolab-hpc-[2-11]
 #! 避开哪个node
-##SBATCH --exclude astrolab-hpc-[12-13]
+##SBATCH --exclude astrolab-hpc-[1]
 #! 输出文件名
 #SBATCH --output ./slurm/slurm_out/slurm-sim-%A.out
 #! 是否独占节点
@@ -61,12 +61,9 @@ sleep 2
 
 
 #! 把worker跑起来 输出worker status
-#! srun -o ./slurm/slurm_out/srun_%x_%j_worker_%n.out dask-worker --nprocs 32 --nthreads 1 --interface ib0 --memory-limit 460GiB --local-directory ${localdir} ${protool}://${scheduler}:${port} &
-#! echo dask-worker started on all nodes
-
-#! 把worker跑起来 不输出worker status
-srun dask-worker --nprocs 32 --nthreads 1 --interface ib0 --memory-limit 460GiB --local-directory ${localdir} ${protool}://${scheduler}:${port} &
+srun -o ./slurm/slurm_out/slurm_worker/srun_%x_%j_worker_%n.out dask-worker --nprocs 32 --nthreads 1 --interface ib0 --memory-limit 460GiB --local-directory ${localdir} ${protool}://${scheduler}:${port} &
 echo dask-worker started on all nodes
+
 
 sleep 1
 echo "[main]Scheduler and workers now running"
@@ -75,4 +72,4 @@ echo "[main]Scheduler and workers now running"
 #! We need to tell dask Client (inside python) where the scheduler is running
 echo "Scheduler is running at ${scheduler}"
 
-python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -sch "${scheduler}:${port}" -np 5821 -s 5 -nw 20 -bs 5821 -lr  
+python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -sch "${scheduler}:${port}" -np 2000 -s 5 -nw 20 -bs 2000 -lr  
