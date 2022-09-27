@@ -11,6 +11,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='YOLO Detection')
     parser.add_argument("-np","--npixel", type=int, default=100)
+    parser.add_argument("-ps","--pscale", type=float, default=0.1)
     parser.add_argument("-s","--steps", type=int, default=5)
     parser.add_argument("-nw","--n_worker", type=int, default=1)
     parser.add_argument("-bs","--block_size", type=int, default=400)

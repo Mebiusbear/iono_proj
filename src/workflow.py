@@ -21,9 +21,10 @@ class Fit_iono:
         self.plot_only = args.plot_only
         self.mac_run = args.mac_run
         self.scheduler = args.scheduler
+        self.pixel_per_screensize_km = args.pscale
 
         output_dir = "./results"
-        self.image_filename = "pixel_%d_step_%d.npy"%(self.npixel,self.steps)
+        self.image_filename = "pixel_%d_step_%d_scale_%d.npy"%(self.npixel,self.steps,int(self.pixel_per_screensize_km*1000))
         self.image_filename = os.path.join("image_npy",self.image_filename)
         self.output_image_filename = os.path.join(output_dir,self.image_filename)
 
@@ -68,8 +69,7 @@ class Fit_iono:
     def part_2(self):
         npixel = self.npixel
         steps= self.steps
-
-        pixel_per_screensize_km = 0.1 # 加到args处
+        pixel_per_screensize_km = self.pixel_per_screensize_km
         screensize_km  = pixel_per_screensize_km * npixel
         
         earth_r = 6371.393
