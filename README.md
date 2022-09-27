@@ -122,3 +122,9 @@ plt.show()
 + param数据加上范围标记
 + 重新审视精度
 + mkdir resluts/image_npy
+
+```
+ln -s target source
+c++ -O3 -shared -std=gnu++11 -I ./pybind11/include `python3-config --cflags --ldflags --libs` example.cpp -o example.so -fPIC
+c++ -O3 -shared -std=gnu++11 -I ./pybind11/include `python3-config --cflags --ldflags --libs` legendre.cpp -o legendre.so -fPIC
+```

@@ -2,7 +2,15 @@
 import chunk
 import numpy as np
 
-from src.apps.normalized_legendre import normalize_pkm
+try:
+    import src.apps.legendre as legendre
+    normalize_pkm = legendre.normalize
+    print ("Use C++ legendre!")
+except Exception as e:
+    from src.apps.normalized_legendre import normalize_pkm
+    print (e)
+    print ("Use python legendre!")
+
 from src.apps.least_square import least_square
 
 

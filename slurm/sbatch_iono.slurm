@@ -5,9 +5,9 @@
 #! 计费账号
 #SBATCH --account astro
 #! 需要的节点数
-#SBATCH --nodes=10
+#SBATCH --nodes=2
 #! 总任务数
-#SBATCH --ntasks=10
+#SBATCH --ntasks=2
 #! 内存限制
 ##SBATCH --mem 100000M
 #! 时间限制
@@ -24,9 +24,9 @@
 #! 最大switches数
 #SBATCH --switches=1
 #! 优先使用那个node
-#SBATCH --nodelist astrolab-hpc-[2-11]
+#SBATCH --nodelist astrolab-hpc-[3-4]
 #! 避开哪个node
-##SBATCH --exclude astrolab-hpc-[1]
+##SBATCH --exclude astrolab-hpc-[2]
 #! 输出文件名
 #SBATCH --output ./slurm/slurm_out/slurm-sim-%A.out
 #! 是否独占节点
@@ -52,7 +52,7 @@ echo ${SLURM_JOB_NODELIST}
 localdir=/tmp/liuyihong
 mkdir -p ${localdir}
 protool=tcp
-scheduler=10.10.20.202
+scheduler=10.10.20.203
 port=28886
 dashboardport=28885
 dask-scheduler --dashboard-address $dashboardport --protocol ${protool} --interface ib0 --port $port &
