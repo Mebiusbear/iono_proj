@@ -72,4 +72,4 @@ echo "[main]Scheduler and workers now running"
 #! We need to tell dask Client (inside python) where the scheduler is running
 echo "Scheduler is running at ${scheduler}"
 
-python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -sch "${scheduler}:${port}" -np 2000 -s 5 -nw 20 -bs 2000 -lr  
+python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -sch "${scheduler}:${port}" -np 2000 -s 6 -nw 20 -bs 2000 -lr  

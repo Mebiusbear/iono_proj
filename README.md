@@ -105,14 +105,14 @@ plt.show()
 + 现在指向的中心 lon : [70. - 140.] 15points; lat :  [ -2.5 - -37.5] 15points
 
 # TODO
-+ 多机并行
++ ~~多机并行~~
++ ~~对准相位中心~~
 + 优化勒让德多项式
 + 写个一个关于UVW，LMN的推导
 + 写一个关于穿刺点的推导
 + 仿真只有一个源的天空
 + 缩小一个范围尝试
-+ 对准相位中心
-+ 写一个requirem
++ 写一个requirement
 + 参数args化
 + func : concat_dataset_allpoint 要改
 + 程序上拆开拟合图像部分
