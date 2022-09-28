@@ -2,8 +2,8 @@ dask-worker-space
 __pycache__
 .DS_Store
 
-results/image_npy/*
-results/image_bigrange/*
-!results/imgage_bigrange/*png
+test/data
+cpp_build/main
+*npy
 slurm/slurm_out/*
 *fits

@@ -19,10 +19,10 @@ if __name__ == "__main__":
     parser.add_argument("-mr","--mac_run", default=False, action='store_true')
     parser.add_argument("-lr","--linux_run", default=False, action='store_true')
     parser.add_argument("-mmp","--make_mul_plot", default=False, action='store_true')
+    parser.add_argument("-uc","--use_cpp", default=False, action='store_true')
     parser.add_argument("-sch","--scheduler", type=str)
 
     args = parser.parse_args()
-    print (args)
     iono = Fit_iono(args)
 
     start = time.time()

@@ -1,8 +1,13 @@
 import sys
 import numpy as np
 import os
+import logging
+import time
+
 sys.path.append("./")
 
+from src.apps.write_fits import write_fits
+from src.apps.log_func import init_logging,printf_args
 from src.apps.ionox import read_tec_file
 from src.apps.make_plot import make_mul_plot, make_plot
 from src.apps.spherical_harmonic import (spherical_triangle_transform,
@@ -22,6 +27,11 @@ class Fit_iono:
         self.mac_run = args.mac_run
         self.scheduler = args.scheduler
         self.pixel_per_screensize_km = args.pscale
+        self.use_cpp = args.use_cpp
+        self.args = args
+
+        init_logging(self.npixel,self.steps,int(self.pixel_per_screensize_km*1000))
+        printf_args(args)
 
         output_dir = "./results"
         self.image_filename = "pixel_%d_step_%d_scale_%d.npy"%(self.npixel,self.steps,int(self.pixel_per_screensize_km*1000))
@@ -33,6 +43,8 @@ class Fit_iono:
         self.output_param_filename = os.path.join(output_dir,self.param_filename)
 
     def part_1(self):
+        logging.info("Start part_1 : return origin ydata")
+
         range_size = 15
         lon_start = 50
         lon_end = lon_start+range_size
@@ -64,9 +76,14 @@ class Fit_iono:
             answer = np.load(self.output_param_filename)
         res_data_1 = np.dot(xdata_1,answer.T).reshape(15,15)
 
+        logging.info("finish part_1 !")
+
         return (ydata,res_data_1),answer
 
     def part_2(self):
+        start = time.time()
+        logging.info("Start part_2 : Zip point data to caculate")
+
         npixel = self.npixel
         steps= self.steps
         pixel_per_screensize_km = self.pixel_per_screensize_km
@@ -77,7 +94,7 @@ class Fit_iono:
         iono_deg = screensize_km * 180 / iono_r / np.pi
         iono_half_deg = iono_deg / 2
 
-        print ("pixel_per_screensize",pixel_per_screensize_km,"(km)")
+        print ("\npixel_per_screensize",pixel_per_screensize_km,"(km)")
 
 
         # new_lon_dataset = np.linspace(70,140,npixel) 
@@ -86,8 +103,10 @@ class Fit_iono:
         new_lat_dataset = np.linspace(-26.60055525-iono_half_deg,-26.60055525+iono_half_deg,npixel,dtype=np.float64)
         beta_c_arr, lam_c_arr = spherical_triangle_transform(new_lon_dataset,new_lat_dataset,p_lat=np.radians(10),p_lon=np.radians(10)) 
         print ("longitude range : ",new_lon_dataset[0],new_lon_dataset[-1])
-        print ("latitude range : ",new_lat_dataset[0],new_lat_dataset[-1])
+        print ("latitude range : ",new_lat_dataset[0],new_lat_dataset[-1],end="\n\n")
         point_zip = zip_point(beta_c_arr, lam_c_arr)
+
+        logging.info("Finish part_2! Use time : %f"%(time.time()-start))
 
         return point_zip
 
@@ -98,12 +117,15 @@ class Fit_iono:
         block_size = self.block_size
         n_worker = self.n_worker
         scheduler = self.scheduler
+        use_cpp = self.use_cpp
 
+        start = time.time()
         if n_worker == 1:
+            logging.info("Start part_3 : normalized_legendre, run with one worker!")
             data = concat_dataset_allpoint(point_zip,steps=steps)
         else:
-            print ("Part 3, run on dask!")
-            data = concat_dask_workflow(point_zip=point_zip,steps=steps,block_size=block_size,n_worker=n_worker,scheduler=scheduler)
+            logging.info("Start part_3 : normalized_legendre, run on dask!")
+            data = concat_dask_workflow(args=self.args,point_zip=point_zip,steps=steps,block_size=block_size,n_worker=n_worker,scheduler=scheduler,use_cpp=use_cpp)
         
         ans_shape = answer.shape[0]
         xdata_2 = data.reshape(-1,ans_shape)
@@ -111,6 +133,8 @@ class Fit_iono:
         res_data_2 = res_data_2.reshape(npixel,npixel)
 
         np.save(self.output_image_filename,res_data_2)
+        logging.info("Finish part_3! Use time : %f"%(time.time()-start))
+
 
     def makeplot(self):
         make_plot(self.output_image_filename)
@@ -134,5 +158,8 @@ class Fit_iono:
     def linux_run(self):
         answer = np.load(self.output_param_filename)
         point_zip = self.part_2()
-        print ("Part 2, finish")
         self.part_3(point_zip,answer)
+
+        write_fits(self.output_image_filename,self.args)
+        logging.info("Write fits complete")
+

@@ -1,0 +1,18 @@
+28/09/2022 04:27:23 PM - log_func.py[line:43] - INFO: This is Liuyihong Project!
+
+28/09/2022 04:27:23 PM - log_func.py[line:50] - INFO: npixel : 2000
+28/09/2022 04:27:23 PM - log_func.py[line:50] - INFO: pscale : 0.1
+28/09/2022 04:27:23 PM - log_func.py[line:50] - INFO: steps : 6
+28/09/2022 04:27:23 PM - log_func.py[line:50] - INFO: n_worker : 20
+28/09/2022 04:27:23 PM - log_func.py[line:50] - INFO: block_size : 2000
+28/09/2022 04:27:23 PM - log_func.py[line:50] - INFO: plot_only : False
+28/09/2022 04:27:23 PM - log_func.py[line:50] - INFO: mac_run : False
+28/09/2022 04:27:23 PM - log_func.py[line:50] - INFO: linux_run : True
+28/09/2022 04:27:23 PM - log_func.py[line:50] - INFO: make_mul_plot : False
+28/09/2022 04:27:23 PM - log_func.py[line:50] - INFO: use_cpp : True
+28/09/2022 04:27:23 PM - log_func.py[line:50] - INFO: scheduler : 10.10.20.202:28886
+
+28/09/2022 04:27:23 PM - workflow.py[line:85] - INFO: Start part_2 : Zip point data to caculate
+28/09/2022 04:27:23 PM - workflow.py[line:109] - INFO: Finish part_2! Use time : 0.237996
+28/09/2022 04:27:23 PM - workflow.py[line:127] - INFO: Start part_3 : normalized_legendre, run on dask!
+28/09/2022 04:27:31 PM - workflow.py[line:136] - INFO: Finish part_3! Use time : 7.313141

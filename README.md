@@ -2,7 +2,14 @@
 
 ```
 git clone https://github.com/Mebiusbear/iono_ptoj.git
-export PYTHONPATH=$PYTHONPATH: /path/to/iono_proj
+
+cd iono_proj
+pip install -r requirement.txt
+
+cd cpp_build
+c++ -O3 -shared -std=gnu++11 -I ./pybind11/include `python3-config --cflags --ldflags --libs` legendre.cpp -o legendre.so -fPIC
+mv legendre.so ../src/apps/
+cd ..
 ```
 
 ## mac run
@@ -107,11 +114,14 @@ plt.show()
 # TODO
 + ~~多机并行~~
 + ~~对准相位中心~~
-+ 优化勒让德多项式
++ ~~重新审视精度~~
++ ~~优化勒让德多项式~~
++ ~~分布计算进程~~
++ ~~缩小一个范围尝试~~
+
 + 写个一个关于UVW，LMN的推导
 + 写一个关于穿刺点的推导
 + 仿真只有一个源的天空
-+ 缩小一个范围尝试
 + 写一个requirement
 + 参数args化
 + func : concat_dataset_allpoint 要改
@@ -120,8 +130,9 @@ plt.show()
 + fuser -km .vscode-server && rm -rf .vscode-server
 + log文件
 + param数据加上范围标记
-+ 重新审视精度
 + mkdir resluts/image_npy
++ func : fit_spherical_harmonic 要改
++ 
 
 ```
 ln -s target source

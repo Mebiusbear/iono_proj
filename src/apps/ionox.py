@@ -1,12 +1,9 @@
 import numpy as np
 import datetime
 
-import pandas as pd
 import matplotlib.pyplot as plt
 
 
-import os
-import errno
 #"Function _read_ionex_header and read_tec are obtained from RMExtract"
 
 

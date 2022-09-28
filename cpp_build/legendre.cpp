@@ -1,20 +1,8 @@
 #include <iostream>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+#include <limits>
 #include <math.h>
 
-// int factorial_arr(int fac_arr[20]){
-//     // int res_arr[20];
-//     fac_arr[0] = 1;
-//     for (int i=1; i<20; i++){
-//         fac_arr[i] = fac_arr[i-1] * i;
-//     }
-//     return 0;
-// }
-
-// double factorial(int num, int fac_arr[20]){
-//     return fac_arr[num];
-// }
+using namespace std;
 
 int factorial(int num){
     int res = 1;
@@ -35,16 +23,20 @@ double caculate_nkm(int k,int m){
 }
 
 double caculate_pkm(int k, int m, double theta){
+    typedef std::numeric_limits< double > dbl;
+    cout.precision(dbl::max_digits10);
     if (m == 0){
         if (k == 0){
-            return 1;
+            return 1.0;
         }
         else if (k == 1){
             return cos(theta);
         }
         else if (k > 1){
             double factor_1 = caculate_pkm(k-1,m,theta) * cos(theta) * (2*k-1);
-            double factor_2 = caculate_pkm(k-2,m,theta) * cos(theta) * (k-1);
+            // cout << "factor_1 : " << fixed << k << " " << m << " " << factor_1 << endl;
+            // cout << "cos : " << fixed << k << " " << m << " " << cos(theta) << endl;
+            double factor_2 = caculate_pkm(k-2,m,theta) * (k-1);
             return (factor_1 - factor_2) / k;
         }
     }
@@ -58,11 +50,15 @@ double caculate_pkm(int k, int m, double theta){
 }
 
 double normalize_pkm(int k, int m, double theta){
+    // double res_1 = caculate_nkm(k,m);
+    // double res_2 = caculate_pkm(k,m,theta);
+    // double res = res_1 * res_2;
     return caculate_nkm(k,m) * caculate_pkm(k,m,theta);
 }
 
 
-
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 namespace py = pybind11;
 
 PYBIND11_MODULE(legendre,m)
@@ -76,12 +72,7 @@ PYBIND11_MODULE(legendre,m)
 
 // int main(){
 
-//     int fac_arr[20];
-//     // factorial_arr(fac_arr);
+//     double a = normalize_pkm(4,2,0.555555);
+//     // std::cout << a << std::endl;
 
-//     // double a = caculate_nkm(6,2,fac_arr);
-//     // double a = caculate_pkm(5,2,0.5);
-//     double a = normailize_pkm(4,2,0.55);
-
-//     std::cout << a << std::endl;
 // }

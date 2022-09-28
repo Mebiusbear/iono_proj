@@ -1,17 +1,12 @@
 # spherical_harmonic.py
-import chunk
+import logging
+from src.apps.dask_init import dask_init
+import dask 
 import numpy as np
-
-try:
-    import src.apps.legendre as legendre
-    normalize_pkm = legendre.normalize
-    print ("Use C++ legendre!")
-except Exception as e:
-    from src.apps.normalized_legendre import normalize_pkm
-    print (e)
-    print ("Use python legendre!")
+import time
 
 from src.apps.least_square import least_square
+
 
 
 def spherical_triangle_transform(lon_dataset,lat_dataset,p_lat=0,p_lon=0):
@@ -49,14 +44,27 @@ def zip_point(beta_c_arr, lam_c_arr):
     point_zip = np.concatenate((beta_c_arr_flatten,lam_c_arr_flatten)).T
     return point_zip
 
-def concat_dataset(theta,lam_c,steps=5):
+def concat_dataset(theta,lam_c,steps=5,use_cpp=False):
+
     '''
     pnm * [cos(m*lam) for k in range (9) for m in range (1,k+1) if m < 7]
     pnm * [sin(m*lam) for k in range (9) for m in range (1,k+1) if m < 7]
     output:
         array[cos, sin]
     '''
-    # from src.apps.normalized_legendre import normalize_pkm
+    if use_cpp:
+        try:
+            from src.apps.legendre import normalize as normalize_pkm
+            # logging.info("Use C++ to jiasu")
+        except Exception as e:
+            from src.apps.normalized_legendre import normalize_pkm
+            # logging.info(e)
+            # logging.info("Use python")
+    else:
+        from src.apps.normalized_legendre import normalize_pkm
+        # logging.info("Use python")
+
+
     m = np.array([m for k in range (steps+1) for m in range (1,k+1) if m < 7])
     lam_c_arr = np.ones_like(m) * lam_c * m
     para_cos_arr = np.cos(lam_c_arr)
@@ -70,30 +78,25 @@ def concat_dataset(theta,lam_c,steps=5):
     ans = np.concatenate((factory_1,factory_2))
     return ans
 
-def concat_dataset_allpoint(point_zip,steps=5):
+def concat_dataset_allpoint(point_zip,steps=5,use_cpp=False):
+
     a, b = point_zip[0]
     c = concat_dataset(a,b,steps)
     c_shape = c.shape[0]
     xdata = np.zeros((len(point_zip),c_shape),np.float64)
     for i,(beta_c,lam_c) in enumerate(point_zip):
-        xdata[i] = concat_dataset(beta_c,lam_c,steps)
+        xdata[i] = concat_dataset(beta_c,lam_c,steps,use_cpp)
+
     return xdata
 
-def concat_dask_workflow(point_zip,steps,block_size,n_worker,scheduler):   
-    import dask 
-    from dask.distributed import Client
-    if scheduler == None:
-        client = Client(n_workers=n_worker)
-    else:
-        client = Client(scheduler)
-        print ("Client OK!, scheduler: ",scheduler)
-    # print ("dask_board: ",str(client.dashboard_link)) 
+def concat_dask_workflow(args,point_zip,steps,block_size,n_worker,scheduler,use_cpp=False): 
 
-    
+    client = dask_init(args,n_worker,scheduler)
+
     new_point_zip = point_zip.reshape(block_size,-1,2)
     task = list()
     for i in range (block_size):
-        task.append(dask.delayed(concat_dataset_allpoint)(point_zip=new_point_zip[i],steps=steps))
+        task.append(dask.delayed(concat_dataset_allpoint)(point_zip=new_point_zip[i],steps=steps,use_cpp=use_cpp))
     data = np.array(dask.compute(*task))
     client.close()
     return data

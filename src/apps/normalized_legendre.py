@@ -6,7 +6,7 @@ def caculate_nkm(k,m):
         delta_0m = 1
     else:
         delta_0m = 0
-    
+    nkm = np.float64()
     nkm = (2-delta_0m) * (2*k+1) * math.factorial(k-m) / math.factorial(k+m)
     return np.sqrt(nkm)
 

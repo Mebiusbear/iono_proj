@@ -1,0 +1,8 @@
+dask
+astropy
+numpy
+matplotlib
+pytest
+pandas
+distributed
+bokeh
