@@ -11,6 +11,6 @@ def dask_init(args,n_worker,scheduler):
     else:
         client = Client(scheduler)
         print ("Client OK!, scheduler: ",scheduler)
-    # client.run(init_logging,npixel,steps,pixel_per_screensize_km)
+    # client.run(init_logging,args)
 
     return client

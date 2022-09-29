@@ -1,6 +1,7 @@
 dask-worker-space
 __pycache__
 .DS_Store
+.vscode
 
 build
 test/data

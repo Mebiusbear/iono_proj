@@ -30,7 +30,7 @@ class Fit_iono:
         self.use_cpp = args.use_cpp
         self.args = args
 
-        init_logging(self.npixel,self.steps,int(self.pixel_per_screensize_km*1000))
+        init_logging(args)
         printf_args(args)
 
         output_dir = "./results"

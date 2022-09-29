@@ -1,5 +1,4 @@
 #include <iostream>
-#include <limits>
 #include <math.h>
 
 using namespace std;
@@ -23,8 +22,6 @@ double caculate_nkm(int k,int m){
 }
 
 double caculate_pkm(int k, int m, double theta){
-    typedef std::numeric_limits< double > dbl;
-    cout.precision(dbl::max_digits10);
     if (m == 0){
         if (k == 0){
             return 1.0;
@@ -57,16 +54,16 @@ double normalize_pkm(int k, int m, double theta){
 }
 
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-namespace py = pybind11;
+// #include <pybind11/pybind11.h>
+// #include <pybind11/stl.h>
+// namespace py = pybind11;
 
-PYBIND11_MODULE(legendre,m)
-{
-  m.doc() = "pybind11 example legendre";
+// PYBIND11_MODULE(legendre,m)
+// {
+//   m.doc() = "pybind11 example legendre";
 
-  m.def("normalize", &normalize_pkm, "legendre normalize");
-}
+//   m.def("normalize", &normalize_pkm, "legendre normalize");
+// }
 
 
 

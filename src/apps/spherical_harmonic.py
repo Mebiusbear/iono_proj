@@ -54,7 +54,7 @@ def concat_dataset(theta,lam_c,steps=5,use_cpp=False):
     '''
     if use_cpp:
         try:
-            from src.apps.legendre import normalize as normalize_pkm
+            from src.apps.legendre import normalize_pkm
             # logging.info("Use C++ to jiasu")
         except Exception as e:
             from src.apps.normalized_legendre import normalize_pkm

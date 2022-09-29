@@ -32,9 +32,16 @@ import logging
 
 
 
-def init_logging(npixel,steps,pscale):
+def init_logging(args):
+    npixel = args.npixel
+    steps = args.steps
+    pscale = args.pscale * 1000
+    if args.use_cpp:
+        uc = "cpp"
+    else:
+        uc = "python"
     logging.basicConfig(
-        filename='log_file/pixel_%d_step_%d_scale_%d.log'%(npixel,steps,pscale),
+        filename='log_file/pixel_%d_step_%d_scale_%d_%s.log'%(npixel,steps,pscale,uc),
         filemode="w",
         format="%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s",
         datefmt="%d/%m/%Y %I:%M:%S %p",
