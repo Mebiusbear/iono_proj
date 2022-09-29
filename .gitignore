@@ -2,6 +2,7 @@ dask-worker-space
 __pycache__
 .DS_Store
 
+build
 test/data
 cpp_build/main
 *npy
