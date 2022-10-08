@@ -132,7 +132,7 @@ plt.show()
 + param数据加上范围标记
 + mkdir resluts/image_npy
 + func : fit_spherical_harmonic 要改
-+ 
++ diffusion
 
 ```
 ln -s target source
