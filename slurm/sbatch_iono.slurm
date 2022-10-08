@@ -5,9 +5,9 @@
 #! 计费账号
 #SBATCH --account astro
 #! 需要的节点数
-#SBATCH --nodes=4
+#SBATCH --nodes=3
 #! 总任务数
-#SBATCH --ntasks=4
+#SBATCH --ntasks=3
 #! 内存限制
 ##SBATCH --mem 100000M
 #! 时间限制
@@ -24,7 +24,7 @@
 #! 最大switches数
 #SBATCH --switches=1
 #! 优先使用那个node
-#SBATCH --nodelist astrolab-hpc-[2-5]
+#SBATCH --nodelist astrolab-hpc-[1-3]
 #! 避开哪个node
 ##SBATCH --exclude astrolab-hpc-[1]
 #! 输出文件名
@@ -52,7 +52,7 @@ echo ${SLURM_JOB_NODELIST}
 localdir=/tmp/liuyihong
 mkdir -p ${localdir}
 protool=tcp
-scheduler=10.10.20.202
+scheduler=10.10.20.201
 port=28886
 dashboardport=28885
 dask-scheduler --dashboard-address $dashboardport --protocol ${protool} --interface ib0 --port $port &
@@ -73,8 +73,8 @@ echo "[main]Scheduler and workers now running"
 echo "Scheduler is running at ${scheduler}"
 
 #! python 脚本#可备注
-python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -sch "${scheduler}:${port}" -np 1000 -ps 0.2 -s 6 -bs 1000 -nw 20 -lr -uc
-python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -sch "${scheduler}:${port}" -np 4000 -ps 0.05 -s 6 -bs 4000 -nw 20 -lr -uc
-python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -sch "${scheduler}:${port}" -np 2000 -ps 0.1 -s 6 -bs 2000 -nw 20 -lr -uc
-python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -sch "${scheduler}:${port}" -np 3000 -ps 0.1 -s 6 -bs 3000 -nw 20 -lr -uc
+# python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -sch "${scheduler}:${port}" -np 1000 -ps 0.2 -s 6 -bs 1000 -nw 20 -lr -uc
+# python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -sch "${scheduler}:${port}" -np 4000 -ps 0.05 -s 6 -bs 4000 -nw 20 -lr -uc
+# python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -sch "${scheduler}:${port}" -np 2000 -ps 0.1 -s 6 -bs 2000 -nw 20 -lr -uc
+# python /mnt/storage-work/liuyihong/github/iono_proj/main.py  -sch "${scheduler}:${port}" -np 3000 -ps 0.1 -s 6 -bs 3000 -nw 20 -lr -uc
 

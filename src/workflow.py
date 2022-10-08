@@ -55,21 +55,18 @@ class Fit_iono:
         steps= self.steps
         
         data_dir = "./data" 
-        filename = os.path.join(data_dir,"CODG%03d0.22I"%(10))  
+        filename = os.path.join(data_dir,"CODG%03d0.22I"%(10))
 
-        tecarray, _, lonarray, latarray, _ = read_tec_file(filename)    
-        # tec_dataset = tecarray[4][40:55,35:50] # old
-        tec_dataset = tecarray[21][lon_start:lon_end,lat_start:lat_end] # new
+        tecarray, _, lonarray, latarray, _ = read_tec_file(filename)
+        tec_dataset = tecarray[4][lon_start:lon_end,lat_start:lat_end]
         ydata = tec_dataset.reshape(1,-1)[0]
-        ydata = np.array(ydata,dtype=np.float64)    
+        ydata = np.array(ydata,dtype=np.float64)
 
-        # lon_dataset = lonarray[35:50]   # old
-        # lat_dataset = latarray[40:55]   # old
         lon_dataset = lonarray[lon_start:lon_end]   # new
         lat_dataset = latarray[lat_start:lat_end]   # new
 
         beta_c_arr, lam_c_arr = spherical_triangle_transform(lon_dataset,lat_dataset,p_lat=np.radians(10),p_lon=np.radians(10)) 
-        point_zip = zip_point(beta_c_arr, lam_c_arr)    
+        point_zip = zip_point(beta_c_arr, lam_c_arr)
 
         xdata_1,answer = fit_spherical_harmonic(point_zip,ydata,steps=steps)
         if self.plot_only:
@@ -96,9 +93,6 @@ class Fit_iono:
 
         print ("\npixel_per_screensize",pixel_per_screensize_km,"(km)")
 
-
-        # new_lon_dataset = np.linspace(70,140,npixel) 
-        # new_lat_dataset = np.linspace(-2.5,-37.5,npixel)   
         new_lon_dataset = np.linspace(116.4525771-iono_half_deg,116.4525771+iono_half_deg,npixel,dtype=np.float64)
         new_lat_dataset = np.linspace(-26.60055525-iono_half_deg,-26.60055525+iono_half_deg,npixel,dtype=np.float64)
         beta_c_arr, lam_c_arr = spherical_triangle_transform(new_lon_dataset,new_lat_dataset,p_lat=np.radians(10),p_lon=np.radians(10)) 
