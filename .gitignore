@@ -3,7 +3,7 @@ __pycache__
 .DS_Store
 
 cpp_build/CMakeCache.txt
-cpp_build/pybind11/
+cpp_build/pybind11
 cpp_build/CMakeFiles/
 cpp_build/Makefile
 cpp_build/cmake_install.cmake
