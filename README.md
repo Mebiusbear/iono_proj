@@ -7,19 +7,20 @@ cd iono_proj
 pip install -r requirement.txt
 
 cd cpp_build
-c++ -O3 -shared -std=gnu++11 -I ./pybind11/include `python3-config --cflags --ldflags --libs` legendre.cpp -o legendre.so -fPIC
-mv legendre.so ../src/apps/
+git clone https://github.com/pybind11/pybind11
+cmake .
+make
 cd ..
 ```
 
 ## mac run
 ```
-python main.py -np 4000 -s 5 -nw 16 -bs 800 -mr  
+python main.py -np 4000 -s 6 -nw 16 -bs 800 -ps 0.05 -mr -uc
 ```
 
 ## linux run
 ```
-python main.py -np 4000 -s 5 -nw 16 -bs 800 -lr  
+python main.py -np 4000 -s 5 -nw 16 -bs 800 -lr -uc
 ```
 
 ## just see picture
@@ -133,9 +134,3 @@ plt.show()
 + mkdir resluts/image_npy
 + func : fit_spherical_harmonic 要改
 + 
-
-```
-ln -s target source
-c++ -O3 -shared -std=gnu++11 -I ./pybind11/include `python3-config --cflags --ldflags --libs` example.cpp -o example.so -fPIC
-c++ -O3 -shared -std=gnu++11 -I ./pybind11/include `python3-config --cflags --ldflags --libs` legendre.cpp -o legendre.so -fPIC
-```
