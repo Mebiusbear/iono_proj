@@ -2,8 +2,11 @@ dask-worker-space
 __pycache__
 .DS_Store
 
+cpp_build
+!cpp_build/CMakeLists.txt
 test/data
 cpp_build/main
 *npy
 slurm/slurm_out/*
+*legendre.cpython*
 *fits

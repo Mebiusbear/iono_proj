@@ -58,12 +58,12 @@ class Fit_iono:
         filename = os.path.join(data_dir,"CODG%03d0.22I"%(10))
 
         tecarray, _, lonarray, latarray, _ = read_tec_file(filename)
-        tec_dataset = tecarray[4][lon_start:lon_end,lat_start:lat_end]
+        tec_dataset = tecarray[21][lon_start:lon_end,lat_start:lat_end]
         ydata = tec_dataset.reshape(1,-1)[0]
         ydata = np.array(ydata,dtype=np.float64)
 
-        lon_dataset = lonarray[lon_start:lon_end]   # new
-        lat_dataset = latarray[lat_start:lat_end]   # new
+        lon_dataset = lonarray[lon_start:lon_end]
+        lat_dataset = latarray[lat_start:lat_end]
 
         beta_c_arr, lam_c_arr = spherical_triangle_transform(lon_dataset,lat_dataset,p_lat=np.radians(10),p_lon=np.radians(10)) 
         point_zip = zip_point(beta_c_arr, lam_c_arr)
@@ -71,7 +71,7 @@ class Fit_iono:
         xdata_1,answer = fit_spherical_harmonic(point_zip,ydata,steps=steps)
         if self.plot_only:
             answer = np.load(self.output_param_filename)
-        res_data_1 = np.dot(xdata_1,answer.T).reshape(15,15)
+        res_data_1 = np.dot(xdata_1,answer.T).reshape(range_size,range_size)
 
         logging.info("finish part_1 !")
 
