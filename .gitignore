@@ -2,8 +2,11 @@ dask-worker-space
 __pycache__
 .DS_Store
 
-cpp_build
-!cpp_build/CMakeLists.txt
+cpp_build/CMakeCache.txt
+cpp_build/CMakeFiles/
+cpp_build/Makefile
+cpp_build/cmake_install.cmake
+
 test/data
 cpp_build/main
 *npy
